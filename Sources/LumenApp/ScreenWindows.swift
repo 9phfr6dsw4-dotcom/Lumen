@@ -126,7 +126,7 @@ final class LevelIndicatorController {
         hideTask = Task { @MainActor [weak self] in
             try? await Task.sleep(for: .milliseconds(1500))
             guard !Task.isCancelled, let self else { return }
-            NSAnimationContext.runAnimationGroup { context in
+            await NSAnimationContext.runAnimationGroup { context in
                 context.duration = 0.3
                 self.panel.animator().alphaValue = 0
             }

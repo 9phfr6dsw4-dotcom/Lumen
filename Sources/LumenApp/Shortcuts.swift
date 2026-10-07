@@ -19,7 +19,7 @@ final class SystemHotKeyCenter {
     private var registrations: [UInt32: Registration] = [:]
 
     /// Returns false when macOS refuses the combo (usually because another app owns it).
-    func register(id: UInt32, shortcut: KeyboardShortcut, onPress: @escaping @MainActor () -> Void) -> Bool {
+    func register(id: UInt32, shortcut: LumenCore.KeyboardShortcut, onPress: @escaping @MainActor () -> Void) -> Bool {
         unregister(id: id)
         guard installHandlerIfNeeded() else { return false }
         var modifiers: UInt32 = 0
@@ -104,8 +104,8 @@ private func lumenHotKeyEventHandler(
 @MainActor
 @Observable
 final class ShortcutController {
-    private(set) var brighter: KeyboardShortcut?
-    private(set) var dimmer: KeyboardShortcut?
+    private(set) var brighter: LumenCore.KeyboardShortcut?
+    private(set) var dimmer: LumenCore.KeyboardShortcut?
     /// Shortcuts macOS wouldn't register, keyed by action.
     private(set) var unavailable: Set<ShortcutAction> = []
 
@@ -121,8 +121,8 @@ final class ShortcutController {
         dimmer = Self.load(defaults.data(forKey: Preferences.dimmerShortcutKey))
     }
 
-    var assignments: [ShortcutAction: KeyboardShortcut] {
-        var result: [ShortcutAction: KeyboardShortcut] = [:]
+    var assignments: [ShortcutAction: LumenCore.KeyboardShortcut] {
+        var result: [ShortcutAction: LumenCore.KeyboardShortcut] = [:]
         if let brighter { result[.brighter] = brighter }
         if let dimmer { result[.dimmer] = dimmer }
         for preset in presets {
@@ -131,13 +131,13 @@ final class ShortcutController {
         return result
     }
 
-    func setBrighter(_ shortcut: KeyboardShortcut?) {
+    func setBrighter(_ shortcut: LumenCore.KeyboardShortcut?) {
         brighter = shortcut
         defaults.set(shortcut.flatMap { try? JSONEncoder().encode($0) }, forKey: Preferences.brighterShortcutKey)
         registerAll()
     }
 
-    func setDimmer(_ shortcut: KeyboardShortcut?) {
+    func setDimmer(_ shortcut: LumenCore.KeyboardShortcut?) {
         dimmer = shortcut
         defaults.set(shortcut.flatMap { try? JSONEncoder().encode($0) }, forKey: Preferences.dimmerShortcutKey)
         registerAll()
@@ -172,16 +172,16 @@ final class ShortcutController {
         unavailable = failed
     }
 
-    private static func load(_ data: Data?) -> KeyboardShortcut? {
+    private static func load(_ data: Data?) -> LumenCore.KeyboardShortcut? {
         guard let data else { return nil }
-        return try? JSONDecoder().decode(KeyboardShortcut.self, from: data)
+        return try? JSONDecoder().decode(LumenCore.KeyboardShortcut.self, from: data)
     }
 }
 
 /// A button that records the next key combo pressed.
 struct ShortcutRecorder: View {
-    let shortcut: KeyboardShortcut?
-    let onChange: @MainActor (KeyboardShortcut?) -> Void
+    let shortcut: LumenCore.KeyboardShortcut?
+    let onChange: @MainActor (LumenCore.KeyboardShortcut?) -> Void
     var onCapturingChange: @MainActor (Bool) -> Void = { _ in }
 
     @State private var recorder = ShortcutRecorderModel()
@@ -223,7 +223,7 @@ private final class ShortcutRecorderModel {
     @ObservationIgnored private var monitor: Any?
     @ObservationIgnored private var onCapturingChange: (@MainActor (Bool) -> Void)?
 
-    func start(onRecord: @escaping @MainActor (KeyboardShortcut?) -> Void, onCapturingChange: @escaping @MainActor (Bool) -> Void) {
+    func start(onRecord: @escaping @MainActor (LumenCore.KeyboardShortcut?) -> Void, onCapturingChange: @escaping @MainActor (Bool) -> Void) {
         stop()
         self.onCapturingChange = onCapturingChange
         hint = "Hold ⌃, ⌥ or ⌘ and press a key. Esc cancels."
@@ -258,7 +258,7 @@ private final class ShortcutRecorderModel {
         onCapturingChange = nil
     }
 
-    nonisolated private static func shortcut(from event: NSEvent) -> KeyboardShortcut? {
+    nonisolated private static func shortcut(from event: NSEvent) -> LumenCore.KeyboardShortcut? {
         let flags = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
         var modifiers: ShortcutModifiers = []
         if flags.contains(.command) { modifiers.insert(.command) }
@@ -267,7 +267,7 @@ private final class ShortcutRecorderModel {
         // Shift alone is too easy to press while typing, so it needs a partner.
         guard !modifiers.isEmpty else { return nil }
         if flags.contains(.shift) { modifiers.insert(.shift) }
-        return KeyboardShortcut(keyCode: event.keyCode, modifiers: modifiers, keyName: keyName(for: event))
+        return LumenCore.KeyboardShortcut(keyCode: event.keyCode, modifiers: modifiers, keyName: keyName(for: event))
     }
 
     nonisolated private static func keyName(for event: NSEvent) -> String {

@@ -111,8 +111,8 @@ struct ShortcutsView: View {
     private func shortcutRow(
         _ title: String,
         action: ShortcutAction,
-        shortcut: KeyboardShortcut?,
-        onChange: @escaping @MainActor (KeyboardShortcut?) -> Void
+        shortcut: LumenCore.KeyboardShortcut?,
+        onChange: @escaping @MainActor (LumenCore.KeyboardShortcut?) -> Void
     ) -> some View {
         VStack(alignment: .leading, spacing: 4) {
             HStack(spacing: 12) {
@@ -132,7 +132,7 @@ struct ShortcutsView: View {
         }
     }
 
-    private func conflictMessage(for action: ShortcutAction, shortcut: KeyboardShortcut?) -> String? {
+    private func conflictMessage(for action: ShortcutAction, shortcut: LumenCore.KeyboardShortcut?) -> String? {
         guard let shortcut else { return nil }
         if shortcuts.unavailable.contains(action) {
             return "macOS didn't accept \(shortcut.displayText). Another app may be using it."
