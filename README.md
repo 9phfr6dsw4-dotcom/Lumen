@@ -25,6 +25,28 @@
 - Presets such as Day, Evening and Night set every display at once, each with its own shortcut.
 - Your own shortcuts for brighter and dimmer, a smooth fade between levels, and a small indicator in the corner of the screen you changed.
 
+## Screenshots
+
+![Lumen's menu bar panel with sliders for each display and the Day, Evening and Night presets.](docs/images/lumen-menu-bar.png)
+
+*Menu bar*
+
+![Lumen Displays tab with brightness, contrast and volume for an external monitor and the built-in display.](docs/images/lumen-displays.png)
+
+*Displays*
+
+![Lumen Presets tab with Day, Evening and Night brightness presets.](docs/images/lumen-presets.png)
+
+*Presets*
+
+![Lumen Shortcuts tab for the brightness and volume keys and custom shortcuts.](docs/images/lumen-shortcuts.png)
+
+*Shortcuts*
+
+![Lumen Settings for launch at login, smooth changes, extra dimming and the brightness indicator.](docs/images/lumen-settings.png)
+
+*Settings*
+
 ## Install
 
 1. Download `Lumen.zip` from the [latest release](https://github.com/9phfr6dsw4-dotcom/Lumen/releases/latest), unzip it, and move Lumen into Applications.
