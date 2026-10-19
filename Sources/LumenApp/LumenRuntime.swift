@@ -17,6 +17,7 @@ final class LumenRuntime {
     let mediaKeys: MediaKeyController
     let shortcuts: ShortcutController
     let launchAtLogin: LaunchAtLoginController
+    let updates: UpdateController
 
     @ObservationIgnored private let indicator = LevelIndicatorController()
     @ObservationIgnored private let defaults: UserDefaults
@@ -26,11 +27,13 @@ final class LumenRuntime {
 
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
-        displays = DisplayController(defaults: defaults)
+        let displays = DisplayController(defaults: defaults)
+        self.displays = displays
         presets = PresetController(defaults: defaults)
         mediaKeys = MediaKeyController()
         shortcuts = ShortcutController(defaults: defaults)
         launchAtLogin = LaunchAtLoginController(defaults: defaults)
+        updates = UpdateController(displays: displays)
     }
 
     var brightnessKeysEnabled: Bool { Preferences.isOn(Preferences.brightnessKeysKey, defaults: defaults) }
@@ -53,6 +56,7 @@ final class LumenRuntime {
         displays.refreshDisplays()
         shortcuts.updatePresets(presets.presets)
         updateKeyListening()
+        updates.start()
 
         let center = NotificationCenter.default
         observers.append(center.addObserver(forName: NSApplication.didChangeScreenParametersNotification, object: nil, queue: .main) { [weak self] _ in

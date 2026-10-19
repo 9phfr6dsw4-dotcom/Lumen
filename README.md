@@ -26,15 +26,16 @@
 - **Your own shortcuts** for Brighter, Dimmer and each preset. They work in every app, and Lumen warns you if two of them clash.
 - **Gentle changes.** Brightness glides to its new level instead of jumping, and a small glass indicator shows the new level in the top-right corner of the screen you changed. Turn on **Move all displays together** to keep every screen at the same level.
 - **Stays out of your way.** Lumen lives in the menu bar and opens when you log in. Its window and Dock icon only appear when you open them.
-- **Private.** No account, no tracking, and it never connects to the internet.
+- **Updates itself.** Lumen checks for a new version when it starts and every hour, then installs it and reopens once any brightness change has finished. Turn this off, or check by hand, in **Settings → Updates** or with **Check for Updates…** in the menu.
+- **Private.** No account and no tracking. Lumen only goes online to check GitHub for a new version.
 
 ## Install
 
 1. Download `Lumen.zip` from the [latest release](https://github.com/9phfr6dsw4-dotcom/Lumen/releases/latest) and unzip it.
 2. Drag **Lumen** into **Applications** (choose **Replace** when updating), then open it from there.
-3. If macOS blocks it, open **System Settings → Privacy & Security** and choose **Open Anyway**. (Builds are ad-hoc signed and not notarized, so macOS asks on first launch.)
+3. If macOS blocks it, open **System Settings → Privacy & Security** and choose **Open Anyway**. (Builds aren't notarized by Apple yet, so macOS asks on first launch.)
 4. Lumen appears in the menu bar as a sun. To use your keyboard's brightness and volume keys on your monitors, allow Lumen in **System Settings → Privacy & Security → Accessibility** when it asks. The sliders, presets and your own shortcuts work without it.
-5. **After every update,** remove the old Lumen entry from the Accessibility list and turn on the new one. macOS treats each new build as a new app.
+5. **Updates install themselves** from 0.2.0 on. If the brightness keys stop working after an update, remove the old Lumen entry from the Accessibility list and turn on the new one.
 
 You need an Apple Silicon Mac with macOS 26 or later.
 

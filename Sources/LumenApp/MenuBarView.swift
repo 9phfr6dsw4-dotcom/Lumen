@@ -54,10 +54,24 @@ struct MenuBarView: View {
                 .foregroundStyle(.orange)
             }
 
+            if let version = runtime.updates.updateWaiting {
+                Button {
+                    runtime.updates.checkForUpdates()
+                } label: {
+                    Label("Lumen \(version) is ready to install", systemImage: "arrow.down.circle.fill")
+                        .font(.caption)
+                }
+                .buttonStyle(.borderless)
+                .foregroundStyle(LumenStyle.blue)
+            }
+
             Divider()
 
             HStack {
                 Button("Open Lumen…") { openMainWindow() }
+                Spacer()
+                Button("Check for Updates…") { runtime.updates.checkForUpdates() }
+                    .disabled(!runtime.updates.canCheckForUpdates)
                 Spacer()
                 Button("Quit Lumen") { NSApp.terminate(nil) }
             }
