@@ -33,7 +33,7 @@
     <key>SUFeedURL</key>
     <string>https://github.com/9phfr6dsw4-dotcom/Lumen/releases/latest/download/appcast.xml</string>
     <key>SUPublicEDKey</key>
-    <string>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</string>
+    <string>XbrkJTaPzhNpqefpNzb+rr0Rwe+AP5R0B4o+gv3Aur0=</string>
     <key>SUEnableAutomaticChecks</key>
     <true/>
     <key>SUAutomaticallyUpdate</key>
