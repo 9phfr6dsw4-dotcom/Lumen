@@ -100,6 +100,12 @@ final class DisplayController {
         displays.first { $0.id == id }
     }
 
+    /// True while brightness is still gliding to a new level.
+    var isChangingLevels: Bool { animationTask != nil }
+
+    /// True while a monitor is still being asked what it supports.
+    var isCheckingDisplays: Bool { displays.contains { $0.isChecking } }
+
     // MARK: Finding displays
 
     /// Looks for displays again. Called at launch, after a display is connected or rearranged,

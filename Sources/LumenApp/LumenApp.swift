@@ -42,6 +42,12 @@ struct LumenApp: App {
         }
         .defaultSize(width: 920, height: 760)
         .defaultLaunchBehavior(isFirstLaunch ? .presented : .suppressed)
+        .commands {
+            CommandGroup(after: .appInfo) {
+                Button("Check for Updates…") { runtime.updates.checkForUpdates() }
+                    .disabled(!runtime.updates.canCheckForUpdates)
+            }
+        }
     }
 }
 

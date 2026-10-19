@@ -10,6 +10,7 @@ struct SettingsView: View {
     @AppStorage(Preferences.showIndicatorKey) private var showIndicator = true
 
     private var launchAtLogin: LaunchAtLoginController { runtime.launchAtLogin }
+    private var updates: UpdateController { runtime.updates }
 
     private var versionText: String {
         let info = Bundle.main.infoDictionary
@@ -31,9 +32,10 @@ struct SettingsView: View {
 
                 generalSettings
                 brightnessSettings
+                updateSettings
                 aboutSection
 
-                Label("Lumen works entirely on this Mac. It has no accounts, no tracking and doesn't connect to the internet.", systemImage: "lock.shield")
+                Label("Lumen works entirely on this Mac. It has no accounts and no tracking. It only goes online to check GitHub for a new version of Lumen.", systemImage: "lock.shield")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
@@ -109,6 +111,50 @@ struct SettingsView: View {
         }
     }
 
+    private var updateSettings: some View {
+        GroupBox("Updates") {
+            VStack(alignment: .leading, spacing: 10) {
+                Toggle("Check for updates automatically", isOn: Binding(
+                    get: { updates.automaticallyChecks },
+                    set: { updates.setAutomaticallyChecks($0) }
+                ))
+                Text("Lumen looks for a new version when it starts and then every hour.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
+                Divider()
+
+                Toggle("Download and install updates automatically", isOn: Binding(
+                    get: { updates.automaticallyInstalls },
+                    set: { updates.setAutomaticallyInstalls($0) }
+                ))
+                .disabled(!updates.automaticallyChecks)
+                Text("Lumen installs a new version and reopens by itself, after any brightness change has finished. Your settings and presets stay as they are.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+
+                Divider()
+
+                HStack(alignment: .firstTextBaseline) {
+                    Text(lastCheckText)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    Spacer()
+                    Button("Check for Updates…") { updates.checkForUpdates() }
+                        .disabled(!updates.canCheckForUpdates)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.vertical, 4)
+        }
+    }
+
+    private var lastCheckText: String {
+        guard let date = updates.lastCheckDate else { return "Not checked yet." }
+        return "Last checked \(date.formatted(date: .abbreviated, time: .shortened))."
+    }
+
     private var aboutSection: some View {
         GroupBox("About") {
             VStack(alignment: .leading, spacing: 6) {
@@ -120,9 +166,21 @@ struct SettingsView: View {
                     .fixedSize(horizontal: false, vertical: true)
                 Link("Lumen on GitHub", destination: URL(string: "https://github.com/9phfr6dsw4-dotcom/Lumen")!)
                     .font(.caption)
+                Button("Acknowledgements") { Acknowledgements.open() }
+                    .buttonStyle(.link)
+                    .font(.caption)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.vertical, 4)
         }
+    }
+}
+
+/// Licenses of the code Lumen includes, shipped in the app's Resources folder.
+@MainActor
+enum Acknowledgements {
+    static func open() {
+        guard let url = Bundle.main.url(forResource: "Acknowledgements", withExtension: "txt") else { return }
+        NSWorkspace.shared.open(url)
     }
 }
