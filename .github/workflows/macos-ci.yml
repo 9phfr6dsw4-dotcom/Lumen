@@ -68,6 +68,21 @@ jobs:
           persist-credentials: false
       - name: Run release tool tests
         run: python3 -I Scripts/release/test_sparkle_release.py
+      - name: Check the app trusts the release signing key
+        env:
+          SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
+        run: |
+          if [ -z "$SPARKLE_PRIVATE_KEY" ]; then
+            echo "SPARKLE_PRIVATE_KEY isn't available to this run; the release job checks it again."
+            exit 0
+          fi
+          app_key="$(python3 -c "import plistlib; print(plistlib.load(open('Resources/Info.plist', 'rb'))['SUPublicEDKey'])")"
+          signing_key="$(python3 -I Scripts/release/sparkle_release.py public-key --seed-env SPARKLE_PRIVATE_KEY)"
+          if [ "$app_key" != "$signing_key" ]; then
+            echo "Info.plist's SUPublicEDKey doesn't match SPARKLE_PRIVATE_KEY."
+            exit 1
+          fi
+          echo "Info.plist's SUPublicEDKey matches the release signing key."
 
   release:
     name: Publish release
