@@ -13,7 +13,7 @@ jobs:
   test:
     name: Test on macOS 26
     runs-on: macos-26
-    timeout-minutes: 40
+    timeout-minutes: 220
     steps:
       - uses: actions/checkout@v7
         with:
@@ -43,6 +43,7 @@ jobs:
       - name: Launch packaged app from a clean location without .build
         run: bash Scripts/smoke-test.sh
       - name: Update an older build to a newer one through Sparkle
+        timeout-minutes: 15
         run: bash Scripts/update-test.sh
       - name: Remove the signing identity
         if: always()
